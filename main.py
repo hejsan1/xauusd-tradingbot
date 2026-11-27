@@ -24,7 +24,29 @@ def api(path, headers=None, data=None):
 
     with urllib.request.urlopen(request, timeout=30) as response:
         return json.load(response)
+def build_order(instrument_id, route_id,
+                side, quantity, sl, tp):
 
+    if side not in ("buy", "sell"):
+        raise ValueError("Invalid side")
+
+    if quantity <= 0:
+        raise ValueError("Invalid quantity")
+
+    return {
+        "tradableInstrumentId": int(instrument_id),
+        "routeId": int(route_id),
+        "side": side,
+        "type": "market",
+        "validity": "IOC",
+        "qty": quantity,
+        "price": 0,
+        "stopLoss": sl,
+        "stopLossType": "absolute",
+        "takeProfit": tp,
+        "takeProfitType": "absolute",
+        "strategyId": "EMA_RSI"
+    }
 def main():
     log("ASH ACCOUNT - READ ONLY")
     log("CHECKING XAUUSD SPECIFICATIONS")
